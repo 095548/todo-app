@@ -1,0 +1,33 @@
+### 1. タスクを登録する (POST)
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{
+  "title": "牛乳を買う",
+  "deadlineAt": "2024-12-31T10:00:00"
+}
+
+### 2. 別のタスクを登録する (POST)
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{
+  "title": "銀行に行く",
+  "deadlineAt": "2024-12-01T15:00:00"
+}
+
+### 3. タスク一覧を取得する (GET)
+GET http://localhost:8080/tasks
+
+### 4. タスクの期限を変更する (PATCH)
+# 注意: ID=1 が存在することを確認してから実行してください
+PATCH http://localhost:8080/tasks/1/deadline
+Content-Type: application/json
+
+{
+  "deadlineAt": "2025-01-01T12:00:00"
+}
+
+### 5. タスクを完了にする (PUT)
+# 注意: ID=1 が存在することを確認してから実行してください
+PUT http://localhost:8080/tasks/1/complete

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>エラー - TODOアプリ</title>
+</head>
+<body>
+<h1 style="color: red;">システムエラー</h1>
+
+<p th:text="${errorMessage}">ここにエラーメッセージが表示されます</p>
+
+<hr>
+<a th:href="@{/web/tasks}">TODOリスト一覧に戻る</a>
+</body>
+</html>

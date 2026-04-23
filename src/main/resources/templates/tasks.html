@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TODOアプリ</title>
+</head>
+<body>
+<h1>TODOリスト</h1>
+
+<h2>タスクの登録</h2>
+<form th:action="@{/web/tasks}" method="post" th:object="${taskCreateForm}">
+    <div>
+        <label>タイトル:
+            <input type="text" th:field="*{title}">
+        </label>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red;"></span>
+    </div>
+
+    <div>
+        <label>期限:
+            <input type="datetime-local" th:field="*{deadlineAt}">
+        </label>
+        <span th:if="${#fields.hasErrors('deadlineAt')}" th:errors="*{deadlineAt}" style="color: red;"></span>
+    </div>
+
+    <button type="submit">登録する</button>
+</form>
+<hr>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>タイトル</th>
+        <th>状態</th>
+        <th>期限</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.id}">1</td>
+        <td th:text="${task.title}">サンプルのタイトル</td>
+        <td th:text="${task.status}">NOT_STARTED</td>
+        <td th:text="${task.deadlineAt}">2024-12-31T10:00</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

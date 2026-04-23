@@ -1,3 +1,16 @@
 spring:
   application:
     name: todo-app
+
+  # データベースの接続情報（H2メモリデータベースを使用）
+  datasource:
+    url: jdbc:h2:mem:tododb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  # アプリ起動時にテーブルを自動で作り直す設定（開発中のみ）
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

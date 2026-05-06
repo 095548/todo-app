@@ -38,6 +38,8 @@ dependencies {
     runtimeOnly ("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
 }
 
 tasks.withType<Test> {

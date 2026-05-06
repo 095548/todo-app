@@ -64,5 +64,13 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    // 論理削除は少し応用編なので、まずは上記の基本機能を作ってから実装しましょう！
+    /**
+     * タスクを削除する
+     * @param id 削除したいタスクのID
+     */
+    @Transactional
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定されたIDのタスクが見つかりません: " + id));
+        taskRepository.delee(task);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.todo_app;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -50,6 +51,16 @@ public class TaskController {
     @PutMapping("/{id}/complete")
     public Task complete(@PathVariable Long id) {
         return taskService.completeTask(id);
+    }
+
+    /**
+     * タスクを削除する
+     * [DELETE] /tasks/{id}/delete
+     */
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        taskService.deleteTask(id);
     }
 
     // --- 【重要】申込書の定義 (DTO) ---

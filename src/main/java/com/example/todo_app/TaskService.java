@@ -71,6 +71,6 @@ public class TaskService {
     @Transactional
     public void deleteTask(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定されたIDのタスクが見つかりません: " + id));
-        taskRepository.delee(task);
+        taskRepository.delete(task);
     }
 }

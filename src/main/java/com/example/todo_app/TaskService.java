@@ -38,7 +38,7 @@ public class TaskService {
      */
     @Transactional
     public Task updateDeadline(Long id, LocalDateTime newDeadline) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定されたIDのタスクが見つかりません: " + id));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("指定されたIDのタスクが見つかりません: " + id));
         task.setDeadlineAt(newDeadline);
 
         return taskRepository.save(task);
@@ -50,7 +50,7 @@ public class TaskService {
      */
     @Transactional
     public Task completeTask(Long id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定されたIDのタスクが見つかりません: " + id));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("指定されたIDのタスクが見つかりません: " + id));
         task.setStatus(TaskStatus.COMPLETED);
 
         return taskRepository.save(task);
@@ -70,7 +70,7 @@ public class TaskService {
      */
     @Transactional
     public void deleteTask(Long id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定されたIDのタスクが見つかりません: " + id));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("指定されたIDのタスクが見つかりません: " + id));
         taskRepository.delete(task);
     }
 }

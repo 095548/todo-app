@@ -19,8 +19,10 @@ public class TaskController {
      * [GET] /tasks
      */
     @GetMapping
-    public List<Task> findAll() {
-        return taskService.findAll();
+    public List<TaskResponse> findAll() {
+        return taskService.findAll().stream()
+                .map(TaskResponse::from)
+                .toList();
     }
 
     /**
@@ -29,9 +31,9 @@ public class TaskController {
      * Body: { "title": "...", "deadlineAt": "..." }
      */
     @PostMapping
-    public Task create(@RequestBody TaskForm form) {
-        // 申込書(Form)からデータを取り出して、Serviceに依頼する
-        return taskService.createTask(form.title(), form.deadlineAt());
+    public TaskResponse create(@RequestBody TaskCreateRequest request) {
+        Task task = taskService.createTask(request.title(), request.deadlineAt());
+        return TaskResponse.from(task);
     }
 
     /**
@@ -40,8 +42,9 @@ public class TaskController {
      * Body: { "deadlineAt": "..." }
      */
     @PatchMapping("/{id}/deadline")
-    public Task updateDeadline(@PathVariable Long id, @RequestBody TaskForm form) {
-        return taskService.updateDeadline(id, form.deadlineAt());
+    public TaskResponse updateDeadline(@PathVariable Long id, @RequestBody TaskUpdateDeadlineRequest request) {
+        Task task = taskService.updateDeadline(id, request.deadlineAt());
+        return TaskResponse.from(task);
     }
 
     /**
@@ -49,8 +52,10 @@ public class TaskController {
      * [PUT] /tasks/{id}/complete
      */
     @PutMapping("/{id}/complete")
-    public Task complete(@PathVariable Long id) {
-        return taskService.completeTask(id);
+    public TaskResponse complete(@PathVariable Long id) {
+
+        Task task = taskService.completeTask(id);
+        return TaskResponse.from(task);
     }
 
     /**
@@ -62,9 +67,4 @@ public class TaskController {
     public void delete(@PathVariable Long id) {
         taskService.deleteTask(id);
     }
-
-    // --- 【重要】申込書の定義 (DTO) ---
-    // ユーザーから送られてくるデータの形を定義します
-    // Java 16以降なら「record」を使うと簡潔に書けます
-    public record TaskForm(String title, LocalDateTime deadlineAt) {}
 }

@@ -1,5 +1,6 @@
 package com.example.todo_app;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class TaskController {
      * Body: { "title": "...", "deadlineAt": "..." }
      */
     @PostMapping
-    public TaskResponse create(@RequestBody TaskCreateRequest request) {
+    public TaskResponse create(@Valid @RequestBody TaskCreateRequest request) {
         Task task = taskService.createTask(request.title(), request.deadlineAt());
         return TaskResponse.from(task);
     }
@@ -42,7 +43,7 @@ public class TaskController {
      * Body: { "deadlineAt": "..." }
      */
     @PatchMapping("/{id}/deadline")
-    public TaskResponse updateDeadline(@PathVariable Long id, @RequestBody TaskUpdateDeadlineRequest request) {
+    public TaskResponse updateDeadline(@PathVariable Long id, @Valid @RequestBody TaskUpdateDeadlineRequest request) {
         Task task = taskService.updateDeadline(id, request.deadlineAt());
         return TaskResponse.from(task);
     }

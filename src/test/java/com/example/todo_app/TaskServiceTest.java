@@ -1,10 +1,14 @@
 package com.example.todo_app;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,6 +18,10 @@ class TaskServiceTest {
 
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private CommentRepository commentRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Test
     void タスクを作成できる() {
@@ -58,5 +66,42 @@ class TaskServiceTest {
         // Act & Assert
         assertThatThrownBy(() -> taskService.completeTask(Id))
                 .isInstanceOf(TaskNotFoundException.class);
+    }
+
+    @Test
+    @Transactional
+    void N1問題を観察する() {
+
+        Task task1 = taskService.createTask("タスク1", LocalDateTime.of(2027, 1, 1, 0, 0));
+        Task task2 = taskService.createTask("タスク2", LocalDateTime.of(2027, 1, 1, 0, 0));
+
+        createComment("タスク1へのコメントA", task1);
+        createComment("タスク1へのコメントB", task1);
+        createComment("タスク2へのコメントA", task2);
+        createComment("タスク2へのコメントB", task2);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        System.out.println("===== ここから全コメント取得 =====");
+
+        // Act：全コメントを取得
+        List<Comment> comments = commentRepository.findAll();
+
+        System.out.println("===== コメント取得完了。これから各コメントの親タスクを触る =====");
+
+        // 各コメントの親タスクのタイトルを触る（ここでN+1が起きる）
+        for (Comment c : comments) {
+            System.out.println("コメント: " + c.getContent() + " / 親タスク: " + c.getTask().getTitle());
+        }
+
+        System.out.println("===== ループ終了 =====");
+    }
+
+    private void createComment(String content, Task task) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTask(task);
+        commentRepository.save(comment);
     }
 }

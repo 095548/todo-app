@@ -86,7 +86,7 @@ class TaskServiceTest {
         System.out.println("===== ここから全コメント取得 =====");
 
         // Act：全コメントを取得
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findAllWithTask();
 
         System.out.println("===== コメント取得完了。これから各コメントの親タスクを触る =====");
 

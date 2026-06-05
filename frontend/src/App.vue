@@ -1,47 +1,49 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref, onMounted } from 'vue'
+
+// タスクの型を定義
+interface Task {
+  id: number
+  title: string
+  deadlineAt: string
+  status: string
+  createdAt: string
+  updatedAt: string
+}
+
+const tasks = ref<Task[]>([])
+
+// APIからタスク一覧を取得
+async function fetchTasks() {
+  const response = await fetch('http://localhost:8080/tasks')
+  tasks.value = await response.json()
+}
+
+onMounted(() => {
+  fetchTasks()
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    <h1>タスク一覧</h1>
+    <ul>
+      <li v-for="task in tasks" :key="task.id">
+        {{ task.title }} - {{ task.status }} - 期限: {{ task.deadlineAt }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+div {
+  max-width: 600px;
+  margin: 50px auto;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+li {
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 </style>

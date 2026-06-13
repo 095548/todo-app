@@ -8,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Transactional
 class TaskServiceTest {
 
     @Autowired
@@ -103,5 +105,24 @@ class TaskServiceTest {
         comment.setContent(content);
         comment.setTask(task);
         commentRepository.save(comment);
+    }
+
+    @Test
+    void 存在しないIDで期限変更すると例外が出る(){
+        Long id = 9999L;
+        LocalDateTime newDeadline = LocalDateTime.of(2027, 1, 1, 0, 0);
+
+        assertThatThrownBy(() -> taskService.updateDeadline(id, newDeadline))
+                .isInstanceOf(TaskNotFoundException.class);
+    }
+
+    @Test
+    void タスク一覧を取得できる(){
+        taskService.createTask("タスク1", LocalDateTime.of(2027,1,1,0,0));
+        taskService.createTask("タスク2", LocalDateTime.of(2027,1,1,0,0));
+
+        List<Task> result = taskService.findAll();
+
+         assertThat(result).hasSize(2);
     }
 }

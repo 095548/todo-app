@@ -32,6 +32,7 @@ public class TaskController {
      * Body: { "title": "...", "deadlineAt": "..." }
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public TaskResponse create(@Valid @RequestBody TaskCreateRequest request) {
         Task task = taskService.createTask(request.title(), request.deadlineAt());
         return TaskResponse.from(task);

@@ -7,8 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.MediaType;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import java.time.LocalDateTime;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -18,6 +20,8 @@ class TaskControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private TaskService taskService;
 
     @Test
     void タスク一覧取得APIが200を返す() throws Exception {
@@ -38,5 +42,14 @@ class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void タスク削除APIが204を返す() throws Exception {
+
+        Task task = taskService.createTask("削除されるタスク", LocalDateTime.of(2027, 1, 1, 0, 0));
+
+        mockMvc.perform(delete("/tasks/" + task.getId()))
+                .andExpect(status().isNoContent());
     }
 }

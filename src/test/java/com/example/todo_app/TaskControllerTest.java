@@ -52,4 +52,12 @@ class TaskControllerTest {
         mockMvc.perform(delete("/tasks/" + task.getId()))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void タスク完了APIが200を返す() throws Exception {
+        Task task = taskService.createTask("完了されるタスク", LocalDateTime.of(2027, 1, 1, 0, 0));
+
+        mockMvc.perform(put("/tasks/" + task.getId() + "/complete"))
+                .andExpect(status().isOk());
+    }
 }

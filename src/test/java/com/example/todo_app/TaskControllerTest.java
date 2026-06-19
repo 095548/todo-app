@@ -60,4 +60,20 @@ class TaskControllerTest {
         mockMvc.perform(put("/tasks/" + task.getId() + "/complete"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void タスク期限変更APIが200を返す() throws Exception {
+        Task task = taskService.createTask("期限変更されるタスク", LocalDateTime.of(2027, 1, 1, 0, 0));
+
+        String requestBody = """
+            {
+                "deadlineAt": "2028-02-02T00:00:00"
+            }
+            """;
+
+        mockMvc.perform(patch("/tasks/" + task.getId() + "/deadline")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk());
+    }
 }
